@@ -1,0 +1,189 @@
+<!-- Learn about this code on MDN: https://developer.mozilla.org/en-US/docs/Learn/JavaScript/First_steps/A_first_splash -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Number guessing game</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <style>
+        html {
+            font-family: sans-serif;
+        }
+        
+        body {
+            width: 50%;
+            max-width: 800px;
+            min-width: 480px;
+            margin: 0 auto;
+			background: url(city.jpg);
+        }
+        
+        .lastResult {
+            color: white;
+            padding: 3px;
+        }
+		.title {
+  font-weight: 800;
+  color: transparent;
+  font-size: 78px;
+  background: url("https://phandroid.s3.amazonaws.com/wp-content/uploads/2014/05/rainbow-nebula.jpg") repeat;
+  background-position: 40% 50%;
+  -webkit-background-clip: text;
+  position: relative;
+  text-align: center;
+  line-height: 90px;
+  text-transform: uppercase;
+}
+.sub {
+    text-align: center;
+    font-size: 26px;
+    color: black;
+    text-shadow: 2px 2px 2px #827979;
+    text-transform: uppercase;
+}
+.boxed {
+    background: url(bgm.jpg);
+    box-shadow: 0px 0px 10px #000000a8;
+	    background-size: cover;
+}
+.boxes {
+    padding: 50px;
+    background: #00000082;
+}
+.instruction {
+    color: #ffffff;
+    font-size: 25px;
+    margin-bottom: 60px;
+}
+label {
+    color: #ffffff;
+    font-weight: bold;
+}
+input#guessField {
+    padding: 8px;
+    border: 1px solid #d9bae9;
+    border-radius: 5px;
+	outline: none!important;
+}
+input.guessSubmit {
+    margin-left: 20px;
+    background: #08a1ea;
+    border: 1px solid #08a1ea;
+    padding: 8px;
+    color: #fff;
+	cursor: pointer;
+	transition: all ease 0.7s;
+}
+input.guessSubmit:hover
+{
+ color: #08a1ea;
+ background: #fff;
+}
+.guesses {
+    color: #6dd0ff;
+    background: #000;
+    padding: 4px;
+    box-shadow: 2px 2px 10px #000000d1;
+}
+.lowOrHi
+{
+    color: #08a1ea;
+}
+    </style>
+	<script>
+	$(document).ready(function(){  var mouseX, mouseY;  var ww = $( window ).width();  var wh = $( window ).height();  var traX, traY;  $(document).mousemove(function(e){    mouseX = e.pageX;    mouseY = e.pageY;    traX = ((4 * mouseX) / 570) + 40;    traY = ((4 * mouseY) / 570) + 50;    console.log(traX);    $(".title").css({"background-position": traX + "%" + traY + "%"});  });});
+	</script>
+</head>
+
+<body>
+
+    <h1 class="title">Welcome to Anto Game</h1>
+	
+	
+	<h5 class="sub">Let See Who is lucky !</h5>
+    
+	<div class="boxed">
+	<div class="boxes">
+	<p class="instruction">Enter number between 1 to 100</p>
+    <div class="form"> <label for="guessField">Enter a guess: </label><input type="text" id="guessField" class="guessField"> <input type="submit" value="Submit guess" class="guessSubmit"> </div>
+    <div class="resultParas">
+        <p class="guesses"></p>
+        <p class="lastResult"></p>
+        <p class="lowOrHi"></p>
+    </div>
+	</div>
+	</div>
+</body>
+<script>
+    // Your JavaScript goes here
+    var randomNumber = Math.floor(Math.random() * 10) + 1;
+    var guesses = document.querySelector('.guesses');
+    var lastResult = document.querySelector('.lastResult');
+    var lowOrHi = document.querySelector('.lowOrHi');
+    var guessSubmit = document.querySelector('.guessSubmit');
+    var guessField = document.querySelector('.guessField');
+    var guessCount = 1;
+    var resetButton;
+
+    function checkGuess() {
+      var userGuess = Number(guessField.value);
+      if (guessCount === 1) {
+        guesses.textContent = 'Previous guesses: ';
+      }
+
+      guesses.textContent += userGuess + ' ';
+
+      if (userGuess === randomNumber) {
+        lastResult.textContent = 'Congratulations! You got it right!..Anto will give you a Treat!';
+        lastResult.style.backgroundColor = 'green';
+        lowOrHi.textContent = '';
+        setGameOver();
+      } else if (guessCount === 5) {
+        lastResult.textContent = '!!!GAME OVER!!!';
+        lowOrHi.textContent = '';
+        setGameOver();
+      } else {
+        lastResult.textContent = 'Wrong!';
+        lastResult.style.backgroundColor = 'red';
+        if(userGuess < randomNumber) {
+          lowOrHi.textContent='Last guess was too low!' ;
+        } else if(userGuess > randomNumber) {
+          lowOrHi.textContent = 'Last guess was too high!';
+        }
+      }
+
+      guessCount++;
+      guessField.value = '';
+    }
+
+    guessSubmit.addEventListener('click', checkGuess);
+
+    function setGameOver() {
+      guessField.disabled = true;
+      guessSubmit.disabled = true;
+      resetButton = document.createElement('button');
+      resetButton.textContent = 'Start new game';
+      document.body.appendChild(resetButton);
+      resetButton.addEventListener('click', resetGame);
+    }
+
+    function resetGame() {
+      guessCount = 1;
+      var resetParas = document.querySelectorAll('.resultParas p');
+      for(var i = 0 ; i < resetParas.length ; i++) {
+        resetParas[i].textContent='';
+      }
+
+      resetButton.parentNode.removeChild(resetButton);
+      guessField.disabled = false;
+      guessSubmit.disabled = false;
+      guessField.value='';
+      guessField.focus();
+      lastResult.style.backgroundColor='white';
+      randomNumber=Math.floor(Math.random() * 100) + 1;
+    }
+</script>
+
+</html>
